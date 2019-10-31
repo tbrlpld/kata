@@ -22,7 +22,15 @@ from change import change
     ),
 )
 def test_change(cents, expected_change):
-    """Test change function."""
+    """
+    Test the main functionality of the program.
+
+    This is basically a black box test and does not care about the internal
+    workings. It only defined the input integer and the expected result, which
+    is a dictionary with they coin names as the keys and the number of these
+    coins as the value. Coins that are not used to generate the change are
+    also not included in the dictionary.
+    """
     returned_change = change(cents)
     assert returned_change.get("quarter") == expected_change.get("quarter")
     assert returned_change.get("dime") == expected_change.get("dime")

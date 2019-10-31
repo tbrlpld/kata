@@ -2,6 +2,13 @@
 
 """Small program to return the least number of coins for a given cent value."""
 
+# TODO: Add user interaction or command line arguments. Both is possible.
+#       When argument available on the command line, then use that.
+#       If not arguments are given, start interactive mode.
+
+# TODO: Package program and test on different computer.
+
+from typing import Dict, List
 
 
 class Coin(object):
@@ -18,16 +25,17 @@ class Coin(object):
         self._cent_value = cent_value
 
     @property
-    def name(self):
+    def name(self) -> str:
         """Name of the coin."""
         return self._name
 
     @property
-    def value(self):
+    def value(self) -> int:
         """Value of the coin."""
         return self._cent_value
 
-    def __repr__(self):
+    def __repr__(self) -> str:
+        """Define representation of a coin object when printed."""
         return "{0} ({1} cent(s))".format(self.name, self.value)
 
 
@@ -36,25 +44,24 @@ NICKLE = Coin(name="nickel", cent_value=5)
 DIME = Coin(name="dime", cent_value=10)
 QUARTER = Coin(name="quarter", cent_value=25)
 
-COINS = sorted(
+COINS: List[Coin] = sorted(
     [PENNY, NICKLE, DIME, QUARTER], key=lambda coin: coin.value, reverse=True)
 
 
-def change(cents: int):
+def change(cents: int) -> Dict[str, int]:
     """Return the least number of coins for the given cent value."""
-    coins_to_return = {}
+    coins_to_return: Dict[str, int] = {}
 
-    target_value_of_coins = cents
-    combined_value_of_coins = 0
+    target_value_of_coins: int = cents
+    combined_value_of_coins: int = 0
     # Iterate through the coins starting with the largest
-    for coin in COINS:
-        current_coin = coin
+    for current_coin in COINS:
         # Add coin if result still smaller than or equal to target
         while (
             combined_value_of_coins + current_coin.value
             <= target_value_of_coins
         ):
-            if coins_to_return.get(coin.name) is None:
+            if coins_to_return.get(current_coin.name) is None:
                 coins_to_return[current_coin.name] = 1
             else:
                 coins_to_return[current_coin.name] += 1
