@@ -6,3 +6,12 @@ E.g. to return 51 cents of change in US coins it would return 2 Quarter and 1 Pe
 
 The possible coins only use the widely used Penny, Nickel, Dime and Quarter. 
 The less commonly used Half-Dollar or Dollar coins are not considered
+
+
+Testing
+-------
+
+I am using `pytest` for testing. To run all the tests, just do 
+```bash
+$ pytest
+```
