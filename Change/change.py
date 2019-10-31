@@ -2,10 +2,6 @@
 
 """Small program to return the least number of coins for a given cent value."""
 
-# TODO: Add user interaction or command line arguments. Both is possible.
-#       When argument available on the command line, then use that.
-#       If not arguments are given, start interactive mode.
-
 # TODO: Package program and test on different computer.
 
 from argparse import ArgumentParser
@@ -143,14 +139,43 @@ class ChangeMaker(object):
         self.change.display()
 
 
-argparser = ArgumentParser()
-argparser.add_argument(
-    "cents",
-    type=int,
-    help="Cent value to generate the change with the least number of coins.",
-)
+class App(object):
+    """Class to hold the app logic."""
+
+    def __init__(self):
+        """Create an app instance."""
+        self.argparser = ArgumentParser()
+        self.argparser.add_argument(
+            "cents",
+            type=int,
+            nargs="?",
+            default=0,
+            help="Cent value to generate the change for.",
+        )
+
+        self.changemaker = ChangeMaker()
+
+    def get_user_input(self, cents: int = 0):
+        """Get user input for cents."""
+        while cents == 0:
+            user_input = input(
+                "Please enter a cent value to generate the change for: ",
+            )
+            try:
+                cents = int(user_input)
+            except ValueError:
+                print("You can only enter integer cent value.")
+        return cents
+
+    def run(self):
+        """Run the application."""
+        args = self.argparser.parse_args()
+        cents = args.cents
+        if cents == 0:
+            cents = self.get_user_input()
+        self.changemaker.display_change(cents)
+
 
 if __name__ == "__main__":
-    args = argparser.parse_args()
-    changemaker = ChangeMaker()
-    changemaker.display_change(cents=args.cents)
+    app = App()
+    app.run()
