@@ -8,7 +8,10 @@ from change import change
 
 
 @pytest.mark.parametrize(
-    ("cents", "expected_change"),
+    (
+        "cents",
+        "expected_change",
+    ),
     (
         (1, {"penny": 1}),
         (3, {"penny": 3}),
