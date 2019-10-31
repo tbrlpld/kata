@@ -39,32 +39,44 @@ class Coin(object):
         return "{0} ({1} cent(s))".format(self.name, self.value)
 
 
-PENNY = Coin(name="penny", cent_value=1)
-NICKLE = Coin(name="nickel", cent_value=5)
-DIME = Coin(name="dime", cent_value=10)
-QUARTER = Coin(name="quarter", cent_value=25)
+class ChangeMaker(object):
+    """Class that calculates the change based on given cent value."""
 
-COINS: List[Coin] = sorted(
-    [PENNY, NICKLE, DIME, QUARTER], key=lambda coin: coin.value, reverse=True)
+    def __init__(self):
+        """Create ChangeMaker object."""
+        self._penny: Coin = Coin(name="penny", cent_value=1)
+        self._nickel: Coin = Coin(name="nickel", cent_value=5)
+        self._dime: Coin = Coin(name="dime", cent_value=10)
+        self._quarter: Coin = Coin(name="quarter", cent_value=25)
+        self._coins_unsorted: List[Coin] = [
+            self._penny,
+            self._nickel,
+            self._dime,
+            self._quarter,
+        ]
+        self.coins: List[Coin] = sorted(
+            self._coins_unsorted,
+            key=lambda coin: coin.value,
+            reverse=True,
+        )
 
+    def change(self, cents: int) -> Dict[str, int]:
+        """Return given cent value with the least number of coins."""
+        coins_to_return: Dict[str, int] = {}
 
-def change(cents: int) -> Dict[str, int]:
-    """Return the least number of coins for the given cent value."""
-    coins_to_return: Dict[str, int] = {}
+        target_value_of_coins: int = cents
+        combined_value_of_coins: int = 0
+        # Iterate through the coins starting with the largest
+        for current_coin in self.coins:
+            # Add coin if result still smaller than or equal to target
+            while (
+                combined_value_of_coins + current_coin.value
+                <= target_value_of_coins
+            ):
+                if coins_to_return.get(current_coin.name) is None:
+                    coins_to_return[current_coin.name] = 1
+                else:
+                    coins_to_return[current_coin.name] += 1
+                combined_value_of_coins += current_coin.value
 
-    target_value_of_coins: int = cents
-    combined_value_of_coins: int = 0
-    # Iterate through the coins starting with the largest
-    for current_coin in COINS:
-        # Add coin if result still smaller than or equal to target
-        while (
-            combined_value_of_coins + current_coin.value
-            <= target_value_of_coins
-        ):
-            if coins_to_return.get(current_coin.name) is None:
-                coins_to_return[current_coin.name] = 1
-            else:
-                coins_to_return[current_coin.name] += 1
-            combined_value_of_coins += current_coin.value
-
-    return coins_to_return
+        return coins_to_return

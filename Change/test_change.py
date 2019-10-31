@@ -4,7 +4,7 @@
 
 import pytest
 #
-from change import change
+from change import ChangeMaker
 
 
 @pytest.mark.parametrize(
@@ -34,7 +34,8 @@ def test_change(cents, expected_change):
     coins as the value. Coins that are not used to generate the change are
     also not included in the dictionary.
     """
-    returned_change = change(cents)
+    changemaker = ChangeMaker()
+    returned_change = changemaker.change(cents)
     assert returned_change.get("quarter") == expected_change.get("quarter")
     assert returned_change.get("dime") == expected_change.get("dime")
     assert returned_change.get("nickel") == expected_change.get("nickel")
