@@ -16,6 +16,9 @@ from change import change
         (6, {"nickel": 1, "penny": 1}),
         (11, {"dime": 1, "penny": 1}),
         (15, {"dime": 1, "nickel": 1}),
+        (26, {"quarter": 1, "penny": 1}),
+        (41, {"quarter": 1, "dime": 1, "nickel": 1, "penny": 1}),
+        (51, {"quarter": 2, "penny": 1}),
     ),
 )
 def test_change(cents, expected_change):
