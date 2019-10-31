@@ -35,7 +35,8 @@ def test_change(cents, expected_change):
     also not included in the dictionary.
     """
     changemaker = ChangeMaker()
-    returned_change = changemaker.change(cents)
+    returned_change = changemaker.get_change(cents)
+    assert isinstance(returned_change, dict)
     assert returned_change.get("quarter") == expected_change.get("quarter")
     assert returned_change.get("dime") == expected_change.get("dime")
     assert returned_change.get("nickel") == expected_change.get("nickel")

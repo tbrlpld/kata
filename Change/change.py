@@ -10,7 +10,6 @@
 
 from argparse import ArgumentParser
 from typing import Dict, List
-from pprint import pprint
 
 
 class Coin(object):
@@ -21,10 +20,10 @@ class Coin(object):
     have been defined, the name and value can not be changed
     """
 
-    def __init__(self, name: str, cent_value: int):
+    def __init__(self, name: str, face_value: int):
         """Initialize a coin."""
         self._name = name
-        self._cent_value = cent_value
+        self._face_value = face_value
 
     @property
     def name(self) -> str:
@@ -32,64 +31,116 @@ class Coin(object):
         return self._name
 
     @property
-    def value(self) -> int:
+    def face_value(self) -> int:
         """Value of the coin."""
-        return self._cent_value
+        return self._face_value
 
     def __repr__(self) -> str:
         """Define representation of a coin object when printed."""
-        return "{0} ({1} cent(s))".format(self.name, self.value)
+        return "{0} ({1} cent(s))".format(self.name, self.face_value)
 
 
-class ChangeMaker(object):
-    """Class that calculates the change based on given cent value."""
+class CoinStack(Coin):
+    """Class to represent a stack/set of coins."""
+
+    def __init__(self, name: str, face_value: int, count: int = 0):
+        """Initialize a CoinStack, by default the count is 0."""
+        super().__init__(name=name, face_value=face_value)
+        self.count: int = count
+
+    @property
+    def total_value(self):
+        """Return combined cent value of the coins in the set."""
+        return self.count * self.face_value
+
+    def add_one(self):
+        """Increase the count of these coins by one."""
+        self.count += 1
+
+
+class Change(object):
+    """Class to hold state of change."""
 
     def __init__(self):
-        """Create ChangeMaker object."""
-        self._penny: Coin = Coin(name="penny", cent_value=1)
-        self._nickel: Coin = Coin(name="nickel", cent_value=5)
-        self._dime: Coin = Coin(name="dime", cent_value=10)
-        self._quarter: Coin = Coin(name="quarter", cent_value=25)
-        self._coins_unsorted: List[Coin] = [
-            self._penny,
-            self._nickel,
-            self._dime,
-            self._quarter,
+        """Create Change object."""
+        self.pennies: CoinStack = CoinStack(name="penny", face_value=1)
+        self.nickels: CoinStack = CoinStack(name="nickel", face_value=5)
+        self.dimes: CoinStack = CoinStack(name="dime", face_value=10)
+        self.quarters: CoinStack = CoinStack(name="quarter", face_value=25)
+
+        coins_unsorted: List[Coin] = [
+            self.pennies,
+            self.nickels,
+            self.dimes,
+            self.quarters,
         ]
-        self.coins: List[Coin] = sorted(
-            self._coins_unsorted,
-            key=lambda coin: coin.value,
+        self._coins_sorted_by_face_value: List[Coin] = sorted(
+            coins_unsorted,
+            key=lambda coin: coin.face_value,
             reverse=True,
         )
 
-    def change(self, cents: int) -> Dict[str, int]:
-        """Return given cent value with the least number of coins."""
-        coins_to_return: Dict[str, int] = {}
+    @property
+    def total_value(self):
+        """Return the total value of the all coins included in the change."""
+        return (
+            self.pennies.total_value
+            + self.nickels.total_value
+            + self.dimes.total_value
+            + self.quarters.total_value
+        )
 
+    @property
+    def coins_sorted_by_face_value(self):
+        """Return the coins sorted by face value."""
+        return self._coins_sorted_by_face_value
+
+    def display(self):
+        """Display the current state of the change."""
+        for coin in self.coins_sorted_by_face_value:
+            if coin.count != 0:
+                print("{0}: {1}".format(coin.name, coin.count))
+
+
+class ChangeMaker(object):
+    """Class that to hold logic to generate the change."""
+
+    def __init__(self):
+        """Create ChangeMaker object."""
+        self.change = Change()
+
+    def calc_change(self, cents: int) -> Change:
+        """Generate the given cent value with the least number of coins."""
         target_value_of_coins: int = cents
-        combined_value_of_coins: int = 0
         # Iterate through the coins starting with the largest
-        for current_coin in self.coins:
+        for current_coin in self.change.coins_sorted_by_face_value:
             # Add coin if result still smaller than or equal to target
             while (
-                combined_value_of_coins + current_coin.value
+                self.change.total_value + current_coin.face_value
                 <= target_value_of_coins
             ):
-                if coins_to_return.get(current_coin.name) is None:
-                    coins_to_return[current_coin.name] = 1
-                else:
-                    coins_to_return[current_coin.name] += 1
-                combined_value_of_coins += current_coin.value
+                current_coin.add_one()
+        return self.change
 
+    def get_change(self, cents: int) -> Dict[str, int]:
+        """
+        Return change as a dictionary.
+
+        Coin names as keys and counts as values. Only coins with a count larger
+        than 0 are included. If a coin is not included in the change (it has
+        count 0) the coin name will not be available in the keys,
+        """
+        self.calc_change(cents)
+        coins_to_return: Dict[str, int] = {}
+        for coin in self.change.coins_sorted_by_face_value:
+            if coin.count != 0:
+                coins_to_return[coin.name] = coin.count
         return coins_to_return
 
     def display_change(self, cents: int) -> None:
         """Calculate and display change for given cent value."""
-        change = self.change(cents)
-        for coin in self.coins:
-            count_of_coin = change.get(coin.name)
-            if count_of_coin is not None:
-                print("{0}: {1}".format(coin.name, count_of_coin))
+        self.calc_change(cents)
+        self.change.display()
 
 
 argparser = ArgumentParser()
