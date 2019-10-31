@@ -8,7 +8,9 @@
 
 # TODO: Package program and test on different computer.
 
+from argparse import ArgumentParser
 from typing import Dict, List
+from pprint import pprint
 
 
 class Coin(object):
@@ -80,3 +82,24 @@ class ChangeMaker(object):
                 combined_value_of_coins += current_coin.value
 
         return coins_to_return
+
+    def display_change(self, cents: int) -> None:
+        """Calculate and display change for given cent value."""
+        change = self.change(cents)
+        for coin in self.coins:
+            count_of_coin = change.get(coin.name)
+            if count_of_coin is not None:
+                print("{0}: {1}".format(coin.name, count_of_coin))
+
+
+argparser = ArgumentParser()
+argparser.add_argument(
+    "cents",
+    type=int,
+    help="Cent value to generate the change with the least number of coins.",
+)
+
+if __name__ == "__main__":
+    args = argparser.parse_args()
+    changemaker = ChangeMaker()
+    changemaker.display_change(cents=args.cents)
