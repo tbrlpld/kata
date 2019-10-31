@@ -2,8 +2,6 @@
 
 """Small program to return the least number of coins for a given cent value."""
 
-# TODO: Package program and test on different computer.
-
 from argparse import ArgumentParser
 from typing import Dict, List
 
@@ -144,7 +142,9 @@ class App(object):
 
     def __init__(self):
         """Create an app instance."""
-        self.argparser = ArgumentParser()
+        self.argparser = ArgumentParser(
+            description="Generate a cent amount with as few coins as possible",
+        )
         self.argparser.add_argument(
             "cents",
             type=int,
