@@ -89,6 +89,23 @@ class Change(object):
         """Return the coins sorted by face value."""
         return self._coins_sorted_by_face_value
 
+    @property
+    def as_dict(self) -> Dict[str, int]:
+        """
+        Return change as a dictionary.
+
+        The keys are the coin names. The values are the count of coins of this
+        type.
+
+        Coin types not included in the change (count = 0) are not included in
+        the dictionary.
+        """
+        coins_to_return: Dict[str, int] = {}
+        for coin in self.coins_sorted_by_face_value:
+            if coin.count != 0:
+                coins_to_return[coin.name] = coin.count
+        return coins_to_return
+
     def display(self):
         """Display the current state of the change."""
         for coin in self.coins_sorted_by_face_value:
@@ -97,7 +114,7 @@ class Change(object):
 
 
 class ChangeMaker(object):
-    """Class that to hold logic to generate the change."""
+    """Class that holds logic to generate the change."""
 
     def __init__(self):
         """Create ChangeMaker object."""
@@ -125,11 +142,7 @@ class ChangeMaker(object):
         count 0) the coin name will not be available in the keys,
         """
         self.calc_change(cents)
-        coins_to_return: Dict[str, int] = {}
-        for coin in self.change.coins_sorted_by_face_value:
-            if coin.count != 0:
-                coins_to_return[coin.name] = coin.count
-        return coins_to_return
+        return self.change.as_dict
 
     def display_change(self, cents: int) -> None:
         """Calculate and display change for given cent value."""
