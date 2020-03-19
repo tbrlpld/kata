@@ -13,15 +13,15 @@ from change import ChangeMaker
         "expected_change",
     ),
     (
-        (1, {"penny": 1}),
-        (3, {"penny": 3}),
-        (5, {"nickel": 1}),
-        (6, {"nickel": 1, "penny": 1}),
-        (11, {"dime": 1, "penny": 1}),
-        (15, {"dime": 1, "nickel": 1}),
-        (26, {"quarter": 1, "penny": 1}),
-        (41, {"quarter": 1, "dime": 1, "nickel": 1, "penny": 1}),
-        (51, {"quarter": 2, "penny": 1}),
+        (1, {"pennies": 1}),
+        (3, {"pennies": 3}),
+        (5, {"nickels": 1}),
+        (6, {"nickels": 1, "pennies": 1}),
+        (11, {"dimes": 1, "pennies": 1}),
+        (15, {"dimes": 1, "nickels": 1}),
+        (26, {"quarters": 1, "pennies": 1}),
+        (41, {"quarters": 1, "dimes": 1, "nickels": 1, "pennies": 1}),
+        (51, {"quarters": 2, "pennies": 1}),
     ),
 )
 def test_change(cents, expected_change):
@@ -37,7 +37,7 @@ def test_change(cents, expected_change):
     changemaker = ChangeMaker()
     returned_change = changemaker.get_change(cents)
     assert isinstance(returned_change, dict)
-    assert returned_change.get("quarter") == expected_change.get("quarter")
-    assert returned_change.get("dime") == expected_change.get("dime")
-    assert returned_change.get("nickel") == expected_change.get("nickel")
-    assert returned_change.get("penny") == expected_change.get("penny")
+    assert returned_change.get("quarters") == expected_change.get("quarters")
+    assert returned_change.get("dimes") == expected_change.get("dimes")
+    assert returned_change.get("nickels") == expected_change.get("nickels")
+    assert returned_change.get("pennies") == expected_change.get("pennies")

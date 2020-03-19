@@ -3,6 +3,7 @@
 """Small program to return the least number of coins for a given cent value."""
 
 from argparse import ArgumentParser
+from math import floor
 from typing import Dict, List
 
 
@@ -34,13 +35,19 @@ class Coin(object):
         return "{0} ({1} cent(s))".format(self.name, self.face_value)
 
 
-class CoinStack(Coin):
+class CoinStack(object):
     """Class to represent a stack/set of coins."""
 
-    def __init__(self, name: str, face_value: int, count: int = 0):
+    def __init__(self, name: str, coin_type: Coin, count: int = 0):
         """Initialize a CoinStack, by default the count is 0."""
-        super().__init__(name=name, face_value=face_value)
+        self.name: str = name
+        self.coin_type: Coin = coin_type
         self.count: int = count
+
+    @property
+    def face_value(self):
+        """Returns the face value of the coin type this stack is made from."""
+        return self.coin_type.face_value
 
     @property
     def total_value(self):
@@ -51,26 +58,47 @@ class CoinStack(Coin):
         """Increase the count of these coins by one."""
         self.count += 1
 
+    def add(self, number_of_coins_to_add: int) -> None:
+        """Increase the count of coins in the stack by n."""
+        self.count += number_of_coins_to_add
+
 
 class Change(object):
     """Class to hold state of change."""
 
     def __init__(self):
         """Create Change object."""
-        self.pennies: CoinStack = CoinStack(name="penny", face_value=1)
-        self.nickels: CoinStack = CoinStack(name="nickel", face_value=5)
-        self.dimes: CoinStack = CoinStack(name="dime", face_value=10)
-        self.quarters: CoinStack = CoinStack(name="quarter", face_value=25)
+        penny: Coin = Coin(name="penny", face_value=1)
+        nickel: Coin = Coin(name="nickel", face_value=5)
+        dime: Coin = Coin(name="dime", face_value=10)
+        quarter: Coin = Coin(name="quarter", face_value=25)
 
-        coins_unsorted: List[Coin] = [
+        self.pennies: CoinStack = CoinStack(
+            name="pennies",
+            coin_type=penny,
+        )
+        self.nickels: CoinStack = CoinStack(
+            name="nickels",
+            coin_type=nickel,
+        )
+        self.dimes: CoinStack = CoinStack(
+            name="dimes",
+            coin_type=dime
+        )
+        self.quarters: CoinStack = CoinStack(
+            name="quarters",
+            coin_type=quarter,
+        )
+
+        coin_stacks_unsorted: List[CoinStack] = [
             self.pennies,
             self.nickels,
             self.dimes,
             self.quarters,
         ]
-        self._coins_sorted_by_face_value: List[Coin] = sorted(
-            coins_unsorted,
-            key=lambda coin: coin.face_value,
+        self._coin_stacks_sorted_by_face_value: List[CoinStack] = sorted(
+            coin_stacks_unsorted,
+            key=lambda coin_stack: coin_stack.face_value,
             reverse=True,
         )
 
@@ -85,9 +113,9 @@ class Change(object):
         )
 
     @property
-    def coins_sorted_by_face_value(self):
+    def coin_stacks_sorted_by_face_value(self):
         """Return the coins sorted by face value."""
-        return self._coins_sorted_by_face_value
+        return self._coin_stacks_sorted_by_face_value
 
     @property
     def as_dict(self) -> Dict[str, int]:
@@ -100,16 +128,16 @@ class Change(object):
         Coin types not included in the change (count = 0) are not included in
         the dictionary.
         """
-        coins_to_return: Dict[str, int] = {}
-        for coin in self.coins_sorted_by_face_value:
-            if coin.count != 0:
-                coins_to_return[coin.name] = coin.count
-        return coins_to_return
+        coin_stacks_to_return: Dict[str, int] = {}
+        for coin_stack in self.coin_stacks_sorted_by_face_value:
+            if coin_stack.count != 0:
+                coin_stacks_to_return[coin_stack.name] = coin_stack.count
+        return coin_stacks_to_return
 
     def display(self):
         """Display the current state of the change."""
-        for coin in self.coins_sorted_by_face_value:
-            if coin.count != 0:
+        for coin_stack in self.coin_stacks_sorted_by_face_value:
+            if coin_stack.count != 0:
                 print("{0}: {1}".format(coin.name, coin.count))
 
 
@@ -123,14 +151,16 @@ class ChangeMaker(object):
     def calc_change(self, cents: int) -> Change:
         """Generate the given cent value with the least number of coins."""
         target_value_of_coins: int = cents
+        remaining_to_target_value: int = target_value_of_coins
         # Iterate through the coins starting with the largest
-        for current_coin in self.change.coins_sorted_by_face_value:
-            # Add coin if result still smaller than or equal to target
-            while (
-                self.change.total_value + current_coin.face_value
-                <= target_value_of_coins
-            ):
-                current_coin.add_one()
+        for current_coin_stack in self.change.coin_stacks_sorted_by_face_value:
+            n_coins_fitting_in_remainder = floor(
+                remaining_to_target_value / current_coin_stack.face_value,
+            )
+            current_coin_stack.add(n_coins_fitting_in_remainder)
+            remaining_to_target_value = (
+                remaining_to_target_value % current_coin_stack.face_value
+            )
         return self.change
 
     def get_change(self, cents: int) -> Dict[str, int]:
