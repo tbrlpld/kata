@@ -3,6 +3,7 @@
 """Small program to return the least number of coins for a given cent value."""
 
 from argparse import ArgumentParser
+from math import floor
 from typing import Dict, List
 
 
@@ -51,6 +52,10 @@ class CoinStack(Coin):
         """Increase the count of these coins by one."""
         self.count += 1
 
+    def add(self, number_of_coins_to_add: int) -> None:
+        """Increase the count of coins in the stack by n."""
+        self.count += number_of_coins_to_add
+
 
 class Change(object):
     """Class to hold state of change."""
@@ -62,13 +67,13 @@ class Change(object):
         self.dimes: CoinStack = CoinStack(name="dime", face_value=10)
         self.quarters: CoinStack = CoinStack(name="quarter", face_value=25)
 
-        coins_unsorted: List[Coin] = [
+        coins_unsorted: List[CoinStack] = [
             self.pennies,
             self.nickels,
             self.dimes,
             self.quarters,
         ]
-        self._coins_sorted_by_face_value: List[Coin] = sorted(
+        self._coins_sorted_by_face_value: List[CoinStack] = sorted(
             coins_unsorted,
             key=lambda coin: coin.face_value,
             reverse=True,
@@ -123,14 +128,16 @@ class ChangeMaker(object):
     def calc_change(self, cents: int) -> Change:
         """Generate the given cent value with the least number of coins."""
         target_value_of_coins: int = cents
+        remaining_to_target_value: int = target_value_of_coins
         # Iterate through the coins starting with the largest
-        for current_coin in self.change.coins_sorted_by_face_value:
-            # Add coin if result still smaller than or equal to target
-            while (
-                self.change.total_value + current_coin.face_value
-                <= target_value_of_coins
-            ):
-                current_coin.add_one()
+        for current_coin_stack in self.change.coins_sorted_by_face_value:
+            n_coins_fitting_in_remainder = floor(
+                remaining_to_target_value / current_coin_stack.face_value,
+            )
+            current_coin_stack.add(n_coins_fitting_in_remainder)
+            remaining_to_target_value = (
+                remaining_to_target_value % current_coin_stack.face_value
+            )
         return self.change
 
     def get_change(self, cents: int) -> Dict[str, int]:
