@@ -18,6 +18,28 @@ describe('Is divisible by', () => {
   })
 })
 
+describe('Convert single number to fizzbuzz or string', () => {
+  test('2 to string', () => {
+    expect(fizzbuzz.numToFizzBuzz(2)).toEqual('2')
+  })
+
+  test('3 to fizz', () => {
+    expect(fizzbuzz.numToFizzBuzz(3)).toEqual('Fizz')
+  })
+
+  test('5 to buzz', () => {
+    expect(fizzbuzz.numToFizzBuzz(5)).toEqual('Buzz')
+  })
+
+  test('11 to string', () => {
+    expect(fizzbuzz.numToFizzBuzz(11)).toEqual('11')
+  })
+
+  test('15 to fizzbuzz', () => {
+    expect(fizzbuzz.numToFizzBuzz(15)).toEqual('FizzBuzz')
+  })
+})
+
 // describe('Main function', () => {
 //   test('1 through 10', () => {
 //     expect(fizzbuzz.main(0, 10)).toEqual(

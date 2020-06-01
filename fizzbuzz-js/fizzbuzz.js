@@ -10,12 +10,24 @@ function isDivisible (dividend, divisior) {
 
 exports.isDivisible = isDivisible
 
-function main (start = 1, end = 100) {
-  console.log('Main')
-  for (let i = start; i <= end; i++) {
-    console.log(i)
+function numToFizzBuzz (num) {
+  let response = ''
+  if (isDivisible(num, 3)) {
+    response += 'Fizz'
   }
-  return []
+  if (isDivisible(num, 5)) {
+    response += 'Buzz'
+  }
+  if (!response) {
+    response = num.toString()
+  }
+  return response
+}
+
+exports.numToFizzBuzz = numToFizzBuzz
+
+function main (start = 1, end = 100) {
+
 }
 
 exports.main = main
