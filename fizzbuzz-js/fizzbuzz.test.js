@@ -1,6 +1,18 @@
 const fizzbuzz = require('./fizzbuzz')
 
 describe('Is divisible by', () => {
+  test('1 is not divisible by 3', () => {
+    expect(fizzbuzz.isDivisible(1, 3)).toEqual(false)
+  })
+
+  test('2 is not divisible by 3', () => {
+    expect(fizzbuzz.isDivisible(2, 3)).toEqual(false)
+  })
+
+  test('9 is not divisible by 10', () => {
+    expect(fizzbuzz.isDivisible(9, 10)).toEqual(false)
+  })
+
   test('6 is divisible by 3', () => {
     expect(fizzbuzz.isDivisible(6, 3)).toEqual(true)
   })
@@ -40,16 +52,16 @@ describe('Convert single number to fizzbuzz or string', () => {
   })
 })
 
-// describe('Main function', () => {
-//   test('1 through 10', () => {
-//     expect(fizzbuzz.main(0, 10)).toEqual(
-//       ['1', '2', 'fizz', '4', 'buzz', '6', '7', '8', 'fizz', 'buzz']
-//     )
-//   })
+describe('Main function', () => {
+  test('1 through 10', () => {
+    expect(fizzbuzz.main(1, 10)).toEqual(
+      ['1', '2', 'Fizz', '4', 'Buzz', 'Fizz', '7', '8', 'Fizz', 'Buzz']
+    )
+  })
 
-//   test('90 through 100', () => {
-//     expect(fizzbuzz.main(90, 100)).toEqual(
-//       ['fizzbuzz', '91', '92', 'fizz', '94', 'buzz', 'fizz', '97', '98', 'fizz', 'buzz']
-//     )
-//   })
-// })
+  test('90 through 100', () => {
+    expect(fizzbuzz.main(90, 100)).toEqual(
+      ['FizzBuzz', '91', '92', 'Fizz', '94', 'Buzz', 'Fizz', '97', '98', 'Fizz', 'Buzz']
+    )
+  })
+})

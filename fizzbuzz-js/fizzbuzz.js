@@ -27,7 +27,12 @@ function numToFizzBuzz (num) {
 exports.numToFizzBuzz = numToFizzBuzz
 
 function main (start = 1, end = 100) {
-
+  const fizzbuzzArray = []
+  for (let i = start; i <= end; i++) {
+    const numString = numToFizzBuzz(i)
+    fizzbuzzArray.push(numString)
+  }
+  return fizzbuzzArray
 }
 
 exports.main = main
