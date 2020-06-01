@@ -1,0 +1,21 @@
+{
+  "name": "fizzbuzz",
+  "version": "1.0.0",
+  "description": "Solve fizzbuzz with JS",
+  "main": "fizzbuzz.js",
+  "scripts": {
+    "test": "jest"
+  },
+  "keywords": [
+    "fizzbuzz",
+    "kata"
+  ],
+  "author": "Tibor Leupold",
+  "license": "MIT",
+  "dependencies": {
+    "jest": "^26.0.1"
+  },
+  "standard": {
+    "globals": ["test", "expect"]
+  }
+}
