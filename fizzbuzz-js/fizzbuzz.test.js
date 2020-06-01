@@ -52,15 +52,15 @@ describe('Convert single number to fizzbuzz or string', () => {
   })
 })
 
-describe('Main function', () => {
+describe('Full FizzBuzz', () => {
   test('1 through 10', () => {
-    expect(fizzbuzz.main(1, 10)).toEqual(
+    expect(fizzbuzz.fizzbuzz(1, 10)).toEqual(
       ['1', '2', 'Fizz', '4', 'Buzz', 'Fizz', '7', '8', 'Fizz', 'Buzz']
     )
   })
 
   test('90 through 100', () => {
-    expect(fizzbuzz.main(90, 100)).toEqual(
+    expect(fizzbuzz.fizzbuzz(90, 100)).toEqual(
       ['FizzBuzz', '91', '92', 'Fizz', '94', 'Buzz', 'Fizz', '97', '98', 'Fizz', 'Buzz']
     )
   })
