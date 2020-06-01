@@ -1,7 +1,7 @@
-function main () {
+function main (start, end) {
   return []
 }
 
-module.exports = main
+exports.main = main
 
 main()
