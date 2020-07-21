@@ -4,7 +4,8 @@
   "description": "Solve fizzbuzz with JS",
   "main": "fizzbuzz.js",
   "scripts": {
-    "test": "jest"
+    "test": "jest",
+    "start": "node run.js"
   },
   "keywords": [
     "fizzbuzz",
